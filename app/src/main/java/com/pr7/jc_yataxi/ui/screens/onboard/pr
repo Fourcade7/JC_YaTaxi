@@ -1,0 +1,55 @@
+   Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .wrapContentHeight()
+                .align(alignment = Alignment.Center)
+        ) {
+            onBoardingScreen(pagerState = pagerState)
+            Image(
+                painter = painterResource(
+                    id = when(pagerState.currentPage){
+                        0->{R.drawable.dot1}
+                        1->{R.drawable.dot2}
+                        2->{R.drawable.dot3}
+                        else->{R.drawable.dot1}
+                    }
+                ),
+                contentDescription = "dot",
+                modifier = Modifier.size(70.dp).align(alignment = CenterHorizontally)
+            )
+
+        }
+
+        Column(modifier = Modifier.align(alignment = Alignment.BottomCenter)) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .height(54.dp)
+                    .clickable {
+                        scope.launch {
+                            pagerState.animateScrollToPage(
+                                pagerState.currentPage + 1
+                            )
+                        }
+                    },
+                shape = RoundedCornerShape(15.dp),
+                color = ButtonbackgroundLanguage
+            ) {
+                Column(verticalArrangement = Arrangement.Center) {
+
+                    Text(
+                        text = "Next",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        fontFamily = FontFamily(Font(R.font.mont_semibold)),
+                        fontSize = 17.sp
+                    )
+                }
+
+            }
+            Spacer(modifier = Modifier.height(15.dp))
+        }
+
+
+    }

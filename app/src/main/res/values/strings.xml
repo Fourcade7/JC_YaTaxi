@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">YaTaxi</string>
+    <string name="title_activity_change">ChangeActivity</string>
+    <string name="title_activity_onboarding">OnboardingActivity</string>
+</resources>
