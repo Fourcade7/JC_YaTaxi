@@ -30,6 +30,7 @@ class MainActivity : ComponentActivity() {
             lifecycleScope.launch {
                 delay(3000)
                 startActivity(Intent(this@MainActivity,OnboardingActivity::class.java))
+                finish()
             }
 
         }

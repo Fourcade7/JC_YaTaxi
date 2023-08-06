@@ -2,4 +2,6 @@
     <string name="app_name">YaTaxi</string>
     <string name="title_activity_change">ChangeActivity</string>
     <string name="title_activity_onboarding">OnboardingActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_otpverification">OTPVerificationActivity</string>
 </resources>

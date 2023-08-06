@@ -1,5 +1,6 @@
 package com.pr7.jc_yataxi.ui.screens.change
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Window
 import androidx.activity.ComponentActivity
@@ -34,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -45,6 +47,7 @@ import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.pr7.jc_yataxi.R
 import com.pr7.jc_yataxi.ui.screens.change.ui.theme.JC_YaTaxiTheme
+import com.pr7.jc_yataxi.ui.screens.login.LoginActivity
 import com.pr7.jc_yataxi.ui.theme.BorderBarColor
 import com.pr7.jc_yataxi.ui.theme.CardbackgroundLanguage
 
@@ -62,6 +65,7 @@ class ChangeActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun changeScreen() {
+    val context= LocalContext.current
     Box() {
         Image(
             painter = painterResource(id = R.drawable.frame),
@@ -118,7 +122,10 @@ fun changeScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
-                    .clickable { },
+                    .clickable {
+                        context.startActivity(Intent(context, LoginActivity::class.java))
+
+                    },
                 border = BorderStroke(width = 1.dp, color = BorderBarColor),
                 colors = CardDefaults.cardColors(Color.White),
                 elevation = CardDefaults.cardElevation(10.dp)
@@ -158,7 +165,9 @@ fun changeScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
-                    .clickable { },
+                    .clickable {
+                        context.startActivity(Intent(context, LoginActivity::class.java))
+                    },
                 border = BorderStroke(width = 1.dp, color = BorderBarColor),
                 colors = CardDefaults.cardColors(Color.White),
                 elevation = CardDefaults.cardElevation(10.dp)

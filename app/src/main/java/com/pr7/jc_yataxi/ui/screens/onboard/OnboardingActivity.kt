@@ -1,8 +1,12 @@
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalFoundationApi::class,
+    ExperimentalFoundationApi::class
+)
 
 package com.pr7.jc_yataxi.ui.screens.onboard
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -27,6 +31,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -34,7 +39,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import com.pr7.jc_yataxi.R
+import com.pr7.jc_yataxi.ui.screens.change.ChangeActivity
 import com.pr7.jc_yataxi.ui.screens.change.statusbarcolorchange
 import com.pr7.jc_yataxi.ui.theme.ButtonbackgroundLanguage
 import kotlinx.coroutines.launch
@@ -50,18 +57,21 @@ class OnboardingActivity : ComponentActivity() {
 }
 
 
-@Preview(showSystemUi = true, showBackground = true)
+
 @Composable
 fun onBoardMain() {
     val pagerState = rememberPagerState { 3 }
     val scope = rememberCoroutineScope()
+    val context= LocalContext.current
 
     Column() {
         Column(modifier = Modifier.weight(2f),
         verticalArrangement = Arrangement.Bottom) {
             onBoardingScreen(pagerState = pagerState)
         }
-        Column(modifier = Modifier.weight(1f).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(modifier = Modifier
+            .weight(1f)
+            .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painter = painterResource(
                     id = when(pagerState.currentPage){
@@ -72,7 +82,9 @@ fun onBoardMain() {
                     }
                 ),
                 contentDescription = "dot",
-                modifier = Modifier.size(70.dp).align(alignment = CenterHorizontally)
+                modifier = Modifier
+                    .size(70.dp)
+                    .align(alignment = CenterHorizontally)
             )
         }
         Surface(
@@ -81,11 +93,20 @@ fun onBoardMain() {
                 .padding(16.dp)
                 .height(54.dp)
                 .clickable {
+
+
                     scope.launch {
                         pagerState.animateScrollToPage(
                             pagerState.currentPage + 1
                         )
                     }
+                    if (pagerState.currentPage == 2) {
+                        Log.d("PR77777", "onBoardMain: GG")
+                        context.startActivity(Intent(context, ChangeActivity::class.java))
+
+
+                    }
+
                 },
             shape = RoundedCornerShape(15.dp),
             color = ButtonbackgroundLanguage
@@ -93,7 +114,7 @@ fun onBoardMain() {
             Column(verticalArrangement = Arrangement.Center) {
 
                 Text(
-                    text = "Next",
+                    text = if (pagerState.currentPage==2)"Get Started" else  "Next",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     fontFamily = FontFamily(Font(R.font.mont_semibold)),
