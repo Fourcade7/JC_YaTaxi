@@ -4,4 +4,6 @@
     <string name="title_activity_onboarding">OnboardingActivity</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_otpverification">OTPVerificationActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_home">HomeActivity</string>
 </resources>

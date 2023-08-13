@@ -147,7 +147,9 @@ fun loginScreen() {
                 .fillMaxWidth()
                 .padding(16.dp)
                 .height(54.dp)
-                .clickable {},
+                .clickable {
+                    context.startActivity(Intent(context, OTPVerificationActivity::class.java))
+                },
             shape = RoundedCornerShape(15.dp),
             color = ButtonbackgroundLanguage
         ) {

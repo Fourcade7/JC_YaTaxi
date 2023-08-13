@@ -1,11 +1,14 @@
 package com.pr7.jc_yataxi.ui.screens.login
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,13 +18,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -34,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -44,6 +51,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pr7.jc_yataxi.R
+import com.pr7.jc_yataxi.ui.screens.home.HomeActivity
 import com.pr7.jc_yataxi.ui.screens.login.ui.theme.FocusedBorderColor
 import com.pr7.jc_yataxi.ui.screens.login.ui.theme.JC_YaTaxiTheme
 import com.pr7.jc_yataxi.ui.theme.ButtonbackgroundLanguage
@@ -52,7 +60,7 @@ class OTPVerificationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-                otpverifyScreen()
+            otpverifyScreen()
         }
     }
 }
@@ -61,37 +69,53 @@ class OTPVerificationActivity : ComponentActivity() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun otpverifyScreen() {
-    val context= LocalContext.current
+    val context = LocalContext.current
     var name by remember {
-        mutableStateOf("+998")
+        mutableStateOf("")
     }
-    Column(modifier = Modifier
-        .padding(16.dp)
-        .fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+    ) {
         Spacer(modifier = Modifier.height(35.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Box(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo2),
-                contentDescription = "logo2",
-                modifier = Modifier.size(60.dp)
-            )
+            Card(
+                modifier = Modifier.size(38.dp),
+                shape = RoundedCornerShape(8.dp),
+                onClick = {
+
+                }
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.arrowleft),
+                        contentDescription = "logo2",
+                        modifier = Modifier
+                            .size(13.dp)
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.width(15.dp))
             Text(
 
-                text ="YaTaxi",
+                text = "OTP Verification",
                 textAlign = TextAlign.Start,
-                fontSize = 26.sp,
-                fontFamily = FontFamily(Font(R.font.mont_bold))
+                fontSize = 20.sp,
+                fontFamily = FontFamily(Font(R.font.mont_semibold)),
+                modifier = Modifier.align(Alignment.Center)
             )
         }
         Spacer(modifier = Modifier.height(35.dp))
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text ="Welcome",
+            text = "Verify your number",
             textAlign = TextAlign.Start,
             fontSize = 26.sp,
             fontFamily = FontFamily(Font(R.font.mont_bold))
@@ -99,43 +123,104 @@ fun otpverifyScreen() {
         Text(
             modifier = Modifier
                 .fillMaxWidth(),
-            text ="Enter your phone number",
+            text = "The verification code has been sent to +99850 074 ** **. Please enter the code.",
             textAlign = TextAlign.Start,
             fontSize = 15.sp,
             fontFamily = FontFamily(Font(R.font.mont_light))
         )
         Spacer(modifier = Modifier.height(15.dp))
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = name,
-            onValueChange = {
-                if (it.length < 15) {
-                    name = it
-                }
-            },
-            label = {
-                Text(text = "Phone")
-            },
-            placeholder = {
-                Text(text = "+998")
-            },
-            maxLines = 1,
-            singleLine = true,
-            leadingIcon = {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(imageVector = Icons.Default.Call, contentDescription = "")
-                }
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = FocusedBorderColor, focusedLabelColor = FocusedBorderColor)
-        )
+      Row(modifier = Modifier.fillMaxWidth(),
+          horizontalArrangement = Arrangement.Center) {
+          OutlinedTextField(
+              modifier = Modifier.width(55.dp),
+              value = name,
+              onValueChange = {
+                  if (it.length < 2) {
+                      name = it
+                  }
+              },
+              placeholder = {
+                  Text(text = "")
+              },
+              maxLines = 1,
+              singleLine = true,
+              keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+              colors = TextFieldDefaults.outlinedTextFieldColors(
+                  focusedBorderColor = FocusedBorderColor,
+                  focusedLabelColor = FocusedBorderColor
+              ),
+              textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
+          )
+          Spacer(modifier = Modifier.width(20.dp))
+          OutlinedTextField(
+              modifier = Modifier.width(55.dp),
+              value = name,
+              onValueChange = {
+                  if (it.length < 2) {
+                      name = it
+                  }
+              },
+              maxLines = 1,
+              singleLine = true,
+              keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+              colors = TextFieldDefaults.outlinedTextFieldColors(
+                  focusedBorderColor = FocusedBorderColor,
+                  focusedLabelColor = FocusedBorderColor
+              ),
+              textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
+          )
+          Spacer(modifier = Modifier.width(20.dp))
+          OutlinedTextField(
+              modifier = Modifier.width(55.dp),
+              value = name,
+              onValueChange = {
+                  if (it.length < 2) {
+                      name = it
+                  }
+              },
+              placeholder = {
+                  Text(text = "")
+              },
+              maxLines = 1,
+              singleLine = true,
+              keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+              colors = TextFieldDefaults.outlinedTextFieldColors(
+                  focusedBorderColor = FocusedBorderColor,
+                  focusedLabelColor = FocusedBorderColor
+              ),
+              textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
+          )
+          Spacer(modifier = Modifier.width(20.dp))
+          OutlinedTextField(
+              modifier = Modifier.width(55.dp),
+              value = name,
+              onValueChange = {
+                  if (it.length < 2) {
+                      name = it
+                  }
+              },
+              maxLines = 1,
+              singleLine = true,
+              keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+              colors = TextFieldDefaults.outlinedTextFieldColors(
+                  focusedBorderColor = FocusedBorderColor,
+                  focusedLabelColor = FocusedBorderColor
+              ),
+              textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
+
+          )
+      }
+
+
         Spacer(modifier = Modifier.weight(1f))
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
                 .height(54.dp)
-                .clickable {},
+                .clickable {
+                    context.startActivity(Intent(context, HomeActivity::class.java))
+                },
             shape = RoundedCornerShape(15.dp),
             color = ButtonbackgroundLanguage
         ) {
@@ -146,11 +231,14 @@ fun otpverifyScreen() {
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     fontFamily = FontFamily(Font(R.font.mont_semibold)),
-                    fontSize = 17.sp
+                    fontSize = 17.sp,
+
                 )
             }
 
         }
         Spacer(modifier = Modifier.height(15.dp))
+
+
     }
 }
