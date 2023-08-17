@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.pr7.jc_yataxi.ui.screens.home.bottomscreens
 
 import android.annotation.SuppressLint
@@ -43,14 +45,20 @@ sealed class Screens constructor(
     object Orders : Screens(
         route = "order_screen",
         title = "Order",
-        icon = R.drawable.myorders
+        icon = R.drawable.order
     )
 
     object Profile : Screens(
         route = "profile_screen",
         title = "Profile",
-        icon = R.drawable.profile
+        icon = R.drawable.usercirle
     )
+    object SeatChoose : Screens(
+        route = "seat_screen",
+        title = "SearChoose",
+        icon = R.drawable.usercirle
+    )
+
 
 }
 
@@ -74,7 +82,9 @@ fun RowScope.addItem(
             Icon(
                 painter = painterResource(id = screens.icon),
                 contentDescription = "",
-                modifier = Modifier.size(35.dp).padding(bottom = 5.dp)
+                modifier = Modifier
+                    .size(35.dp)
+                    .padding(bottom = 5.dp)
             )
         },
         selected = currentDestination?.hierarchy?.any { it.route == screens.route } == true,
@@ -131,25 +141,14 @@ fun bottomNavGraphSetup(
 
 
     NavHost(navController = navHostController, startDestination = Screens.Discover.route ){
-        composable(route = Screens.Discover.route){ discoverScreen() }
+        composable(route = Screens.Discover.route){ discoverScreen(navHostController) }
         composable(route = Screens.Orders.route){ orderScreen() }
         composable(route = Screens.Profile.route){ profileScreen() }
+        composable(route = Screens.SeatChoose.route){ seeatChooseScreen() }
 
 
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun bottombarScreen() {
 
-
-    val navController = rememberNavController()
-    Scaffold(
-        bottomBar ={ BottomBar(navHostController = navController) }
-    ) {
-        bottomNavGraphSetup(navHostController = navController)
-    }
-}
 
