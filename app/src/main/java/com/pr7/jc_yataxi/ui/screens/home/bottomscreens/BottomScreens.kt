@@ -1,4 +1,6 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class
+)
 
 package com.pr7.jc_yataxi.ui.screens.home.bottomscreens
 
@@ -29,6 +31,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.pr7.jc_yataxi.R
+import com.pr7.jc_yataxi.ui.data.network.models.userinfo.response.UserInfoChangeRCD
+import com.pr7.jc_yataxi.ui.screens.home.HomeViewModel
 import com.pr7.jc_yataxi.ui.screens.home.ui.theme.BottomColors
 
 sealed class Screens constructor(
@@ -58,6 +62,13 @@ sealed class Screens constructor(
         title = "SearChoose",
         icon = R.drawable.usercirle
     )
+
+    object Regions : Screens(
+        route = "regions_screen",
+        title = "Regions",
+        icon = R.drawable.usercirle
+    )
+
 
 
 }
@@ -136,15 +147,21 @@ fun BottomBar(navHostController: NavHostController) {
 
 @Composable
 fun bottomNavGraphSetup(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    userInfoChangeRCD: UserInfoChangeRCD,
+    homeViewModel: HomeViewModel,
+    token:String
+
 ) {
 
 
     NavHost(navController = navHostController, startDestination = Screens.Discover.route ){
-        composable(route = Screens.Discover.route){ discoverScreen(navHostController) }
+        composable(route = Screens.Discover.route){ discoverScreen(navHostController,userInfoChangeRCD,homeViewModel) }
         composable(route = Screens.Orders.route){ orderScreen() }
         composable(route = Screens.Profile.route){ profileScreen() }
         composable(route = Screens.SeatChoose.route){ seeatChooseScreen() }
+        composable(route = Screens.Regions.route){ regionsListScreen(navHostController = navHostController, homeViewModel = homeViewModel, token = token) }
+
 
 
     }

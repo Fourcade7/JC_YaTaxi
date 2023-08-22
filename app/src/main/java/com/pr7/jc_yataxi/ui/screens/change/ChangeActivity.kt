@@ -24,12 +24,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ShapeDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,16 +42,47 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.pr7.jc_yataxi.R
-import com.pr7.jc_yataxi.ui.screens.change.ui.theme.JC_YaTaxiTheme
+import com.pr7.jc_yataxi.ui.data.pref.DataStoreManager
+import com.pr7.jc_yataxi.ui.data.pref.loadToken
+import com.pr7.jc_yataxi.ui.screens.home.HomeActivity
 import com.pr7.jc_yataxi.ui.screens.login.LoginActivity
+import com.pr7.jc_yataxi.ui.screens.register.RegisterActivity
 import com.pr7.jc_yataxi.ui.theme.BorderBarColor
 import com.pr7.jc_yataxi.ui.theme.CardbackgroundLanguage
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
+
+lateinit var dataStoreManager: DataStoreManager
 class ChangeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        dataStoreManager=DataStoreManager(this@ChangeActivity)
+
+
+        lifecycleScope.launch {
+            dataStoreManager.loadString("usertype").collect{
+                if (it!=null){
+                    if (loadToken()!=null){
+                        startActivity(Intent(this@ChangeActivity, HomeActivity::class.java))
+                    }else{
+                        startActivity(Intent(this@ChangeActivity, LoginActivity::class.java))
+
+                    }
+                }
+            }
+
+
+
+
+
+
+        }
         setContent {
             statusbarcolorchange(window = window)
             changeScreen()
@@ -66,6 +95,7 @@ class ChangeActivity : ComponentActivity() {
 @Composable
 fun changeScreen() {
     val context= LocalContext.current
+    val scope= rememberCoroutineScope()
     Box() {
         Image(
             painter = painterResource(id = R.drawable.frame),
@@ -77,7 +107,7 @@ fun changeScreen() {
         Card(
             modifier = Modifier
                 .padding(16.dp)
-                .clickable {  },
+                .clickable { },
             colors = CardDefaults.cardColors(CardbackgroundLanguage),
             shape = RoundedCornerShape(25.dp),
             elevation = CardDefaults.cardElevation(5.dp)
@@ -123,7 +153,10 @@ fun changeScreen() {
                     .fillMaxWidth()
                     .height(60.dp)
                     .clickable {
-                        context.startActivity(Intent(context, LoginActivity::class.java))
+                        context.startActivity(Intent(context, RegisterActivity::class.java))
+                        scope.launch {
+                            dataStoreManager.saveString("usertype","client")
+                        }
 
                     },
                 border = BorderStroke(width = 1.dp, color = BorderBarColor),
@@ -166,7 +199,12 @@ fun changeScreen() {
                     .fillMaxWidth()
                     .height(60.dp)
                     .clickable {
-                        context.startActivity(Intent(context, LoginActivity::class.java))
+
+                        context.startActivity(Intent(context, RegisterActivity::class.java))
+                       scope.launch {
+                           dataStoreManager.saveString("usertype","driver")
+                       }
+
                     },
                 border = BorderStroke(width = 1.dp, color = BorderBarColor),
                 colors = CardDefaults.cardColors(Color.White),

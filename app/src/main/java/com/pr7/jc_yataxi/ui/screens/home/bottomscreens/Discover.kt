@@ -5,6 +5,7 @@ package com.pr7.jc_yataxi.ui.screens.home.bottomscreens
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.icu.util.Calendar
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,7 +32,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -55,15 +58,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.pr7.jc_yataxi.R
+import com.pr7.jc_yataxi.ui.data.network.models.login.response.LoginRCD
+import com.pr7.jc_yataxi.ui.data.network.models.regions.response.RegionsR
+import com.pr7.jc_yataxi.ui.data.network.models.userinfo.response.UserInfoChangeRCD
 import com.pr7.jc_yataxi.ui.screens.home.HomeActivity
+import com.pr7.jc_yataxi.ui.screens.home.HomeViewModel
 import com.pr7.jc_yataxi.ui.screens.home.ui.theme.CardStrokeColors
 import com.pr7.jc_yataxi.ui.screens.home.ui.theme.LayoutbackgroundColors
 import com.pr7.jc_yataxi.ui.theme.ButtonbackgroundLanguage
 
 
 //@Preview(showSystemUi = true, showBackground = true)
+@ExperimentalMaterial3Api
 @Composable
-fun discoverScreen(navController: NavController) {
+fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChangeRCD,homeViewModel: HomeViewModel) {
 
 
     val context = LocalContext.current
@@ -83,6 +91,8 @@ fun discoverScreen(navController: NavController) {
             selectedTimeText = "$selectedHour:$selectedMinute"
         }, hour, minute, false
     )
+
+
 
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -124,7 +134,7 @@ fun discoverScreen(navController: NavController) {
                     Spacer(modifier = Modifier.height(10.dp))
 
                     Text(
-                        text = "Sarvar Erkinjonov",
+                        text = "${userInfoChangeRCD.first_name} ${userInfoChangeRCD.last_name}",
                         style = TextStyle(
                             fontSize = 20.sp,
                             fontFamily = FontFamily(Font(R.font.mont_bold)),
@@ -173,7 +183,9 @@ fun discoverScreen(navController: NavController) {
                             .fillMaxHeight()
                             .weight(1f)
                     ) {
-                        Column(Modifier.clickable { }) {
+                        Column(Modifier.clickable {
+                            navController.navigate(Screens.Regions.route)
+                        }) {
                             Text(
                                 text = "From",
                                 style = TextStyle(
@@ -342,7 +354,7 @@ fun discoverScreen(navController: NavController) {
                         modifier = Modifier
                             .weight(1f)
                             .clickable {
-                              navController.navigate(route = Screens.SeatChoose.route)
+                                navController.navigate(route = Screens.SeatChoose.route)
                             },
                         border = BorderStroke(width = 1.dp,color = CardStrokeColors),
                     ) {

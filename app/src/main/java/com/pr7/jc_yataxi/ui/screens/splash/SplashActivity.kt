@@ -20,8 +20,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.pr7.jc_yataxi.ui.data.pref.DataStoreManager
+import com.pr7.jc_yataxi.ui.data.pref.loadOnboard
 import com.pr7.jc_yataxi.ui.screens.change.ChangeActivity
 import com.pr7.jc_yataxi.ui.screens.onboard.OnboardingActivity
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -36,15 +38,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
 
-        load()
+        savedtext=loadOnboard()
+        lifecycleScope.launch {
         if (savedtext) {
+            delay(3000)
             startActivity(Intent(this@MainActivity, ChangeActivity::class.java))
-
         } else {
+            delay(3000)
             startActivity(Intent(this@MainActivity, OnboardingActivity::class.java))
-
         }
-
+    }
 
         setContent {
             statusbarcolorchange(window = window)
@@ -54,11 +57,7 @@ class MainActivity : ComponentActivity() {
 
 
 
-    fun load() {
-        val sharedPreferences = getSharedPreferences("Pr", MODE_PRIVATE)
-        savedtext = sharedPreferences.getBoolean("pr", false)
 
-    }
 
 }
 

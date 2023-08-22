@@ -10,12 +10,6 @@ import kotlinx.coroutines.launch
 
 class DataStoreViewModel constructor(application: Application):AndroidViewModel(application) {
 
-    val dataStoreManager=DataStoreManager(application)
-    init {
-        viewModelScope.launch {
-            val getdata=dataStoreManager.load("firstt").asLiveData(Dispatchers.Main)
 
-        }
-    }
 
 }

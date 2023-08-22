@@ -14,18 +14,36 @@ import kotlinx.coroutines.flow.map
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class DataStoreManager constructor(val context: Context) {
-    suspend fun save(key:String,value:Int) {
+    suspend fun saveInt(key:String,value:Int) {
         val datastorekey= intPreferencesKey(key)
         context.dataStore.edit { settings ->
             settings[datastorekey]= value
         }
     }
-    suspend fun load(key:String): Flow<Int> {
+    suspend fun loadInt(key:String): Flow<Int> {
         val datastorekey= intPreferencesKey(key)
         val flow: Flow<Int> =context.dataStore.data
             .map { preferences ->
                 // No type safety.
                 preferences[datastorekey]?:0
+            }
+
+        return flow
+    }
+
+    suspend fun saveString(key:String,value:String) {
+        val datastorekey= stringPreferencesKey(key)
+        context.dataStore.edit { settings ->
+            settings[datastorekey]= value
+        }
+    }
+
+    suspend fun loadString(key:String): Flow<String?> {
+        val datastorekey= stringPreferencesKey(key)
+        val flow: Flow<String?> =context.dataStore.data
+            .map { preferences ->
+                // No type safety.
+                preferences[datastorekey]?:null
             }
 
         return flow

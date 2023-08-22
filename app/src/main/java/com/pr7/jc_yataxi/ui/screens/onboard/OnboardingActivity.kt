@@ -46,6 +46,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.lifecycleScope
 import com.pr7.jc_yataxi.R
 import com.pr7.jc_yataxi.ui.data.pref.DataStoreManager
+import com.pr7.jc_yataxi.ui.data.pref.saveOnboard
 import com.pr7.jc_yataxi.ui.screens.change.ChangeActivity
 import com.pr7.jc_yataxi.ui.screens.change.statusbarcolorchange
 import com.pr7.jc_yataxi.ui.theme.ButtonbackgroundLanguage
@@ -58,7 +59,7 @@ class OnboardingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        save(true)
+        saveOnboard(true)
 
         setContent {
             statusbarcolorchange(window = window)
@@ -66,11 +67,7 @@ class OnboardingActivity : ComponentActivity() {
         }
     }
 
-    fun save(completed:Boolean?) {
-        val editor = getSharedPreferences("Pr", MODE_PRIVATE).edit() as SharedPreferences.Editor
-        editor.putBoolean("pr", completed!!)
-        editor.commit()
-    }
+
 }
 
 
