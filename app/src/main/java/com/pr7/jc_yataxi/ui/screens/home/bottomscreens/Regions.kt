@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -45,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.pr7.jc_yataxi.R
+import com.pr7.jc_yataxi.ui.data.network.models.district.response.DistrictR
 import com.pr7.jc_yataxi.ui.data.network.models.regions.response.RegionsR
 import com.pr7.jc_yataxi.ui.screens.home.HomeViewModel
 import kotlinx.coroutines.flow.cancellable
@@ -62,7 +64,10 @@ fun regionsListScreen(navHostController: NavHostController,homeViewModel: HomeVi
     homeViewModel.getAllRegionsCD(token)
 
 
+
     val arrayRegions : State<ArrayList<RegionsR>?> = homeViewModel.mlivedataAllRegionsCD.observeAsState()
+    val arrayDistrictR : State<ArrayList<DistrictR>?> = homeViewModel.mlivedataAllDistrictRCD.observeAsState()
+    val succesdis: State<Boolean?> = homeViewModel.succesdis.observeAsState()
     val scope= rememberCoroutineScope()
 
 
@@ -79,7 +84,7 @@ fun regionsListScreen(navHostController: NavHostController,homeViewModel: HomeVi
                 modifier = Modifier.size(38.dp),
                 shape = RoundedCornerShape(8.dp),
                 onClick = {
-
+                    navHostController.navigate(Screens.Discover.route)
                 }
             ) {
                 Box(
@@ -105,21 +110,26 @@ fun regionsListScreen(navHostController: NavHostController,homeViewModel: HomeVi
                 modifier = Modifier.align(Alignment.Center)
             )
         }
-        Spacer(modifier = Modifier.height(55.dp))
-       scope.launch {
-           homeViewModel.succesreg.mapLatest {
-               Log.d("PR77777", "regionsListScreen: Succes State ${it} ")
 
-           }
-       }
+
+        Spacer(modifier = Modifier.height(15.dp))
 
         if (arrayRegions.value!=null){
-            Log.d("PR77777", "regionsListScreen: livedata  ")
 
-            LazyColumn(){
-                itemsIndexed(arrayRegions.value!!){index: Int, item: RegionsR ->
-                    lazyselectitem(item)
+
+
+            LazyColumn(contentPadding = PaddingValues(bottom = 100.dp)){
+                if (succesdis.value==true){
+                    itemsIndexed(arrayDistrictR.value!!){index: Int, item: DistrictR ->
+                        lazyitemdistrict(districtR = item, homeViewModel = homeViewModel, token = token, navHostController = navHostController)
+                    }
+                    homeViewModel.succesreg.value=false
+                } else{
+                    itemsIndexed(arrayRegions.value!!){index: Int, item: RegionsR ->
+                        lazyselectitem(item,homeViewModel,token)
+                    }
                 }
+
             }
         }
 
@@ -132,17 +142,22 @@ fun regionsListScreen(navHostController: NavHostController,homeViewModel: HomeVi
 
 //@Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun lazyselectitem(regionsR: RegionsR) {
+fun lazyselectitem(regionsR: RegionsR,homeViewModel: HomeViewModel,token: String) {
     var selecteditem by remember {
-        mutableStateOf("item.selected")
+        mutableStateOf(regionsR.selectable)
     }
 
-    Column(modifier = Modifier.clickable {
+    Column(modifier = Modifier
+        .padding(5.dp)
+        .clickable {
+            selecteditem = !selecteditem
+            Log.d("PR77777", "lazyselectitem: ${regionsR.id} ${regionsR.name} ")
+            homeViewModel.getDistrictCD(token, regionsR.id!!.toInt())
 
-    }) {
+        }) {
         Box(
             modifier = Modifier
-                .padding(10.dp)
+                .padding(horizontal = 10.dp)
                 .fillMaxWidth()
 
         ) {
@@ -151,11 +166,68 @@ fun lazyselectitem(regionsR: RegionsR) {
                 modifier = Modifier.align(Alignment.CenterStart)
             )
 
+                Icon(
+                    painter = painterResource(id = R.drawable.arrowrightregions),
+                    contentDescription = "Done",
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .size(40.dp)
+                )
+
+
+
+
+
+
+        }
+        Divider(modifier = Modifier.padding(horizontal = 16.dp))
+
+    }
+
+
+
+}
+
+@Composable
+fun lazyitemdistrict(districtR: DistrictR,homeViewModel: HomeViewModel,token: String,navHostController: NavHostController) {
+
+
+    Column(modifier = Modifier
+        .padding(5.dp)
+        .clickable {
+
+            Log.d("PR77777", "lazyselectitem: ${districtR.id} ${districtR.name} ")
+             if (homeViewModel.districtchoose.value=="from"){
+                 homeViewModel.districtfrom.value=districtR.name
+             }
+            if (homeViewModel.districtchoose.value=="to"){
+                homeViewModel.districtto.value=districtR.name
+            }
+            navHostController.navigate(Screens.Discover.route)
+
+
+        }) {
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 10.dp)
+                .fillMaxWidth()
+
+        ) {
+            Text(
+                text = districtR.name,
+                modifier = Modifier.align(Alignment.CenterStart)
+            )
+
             Icon(
                 painter = painterResource(id = R.drawable.arrowrightregions),
                 contentDescription = "Done",
-                modifier = Modifier.align(Alignment.CenterEnd)
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .size(40.dp)
             )
+
+
+
 
 
 

@@ -40,7 +40,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -60,6 +62,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.text.isDigitsOnly
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.pr7.jc_yataxi.R
 import com.pr7.jc_yataxi.ui.data.network.models.verify_otp.request.OtpCD
@@ -78,29 +81,41 @@ class OTPVerificationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkpermissioins()
+
+        var recievedlivedata=MutableLiveData<String>("Kuting")
         val otpcode = intent.getStringExtra("otpcode")
         val phone = intent.getStringExtra("phonenumber")
         otpViewModel.verifyotp(otpCD = OtpCD(otpcode!!))
         otpViewModel.succes.observe(this@OTPVerificationActivity){
-            receivemsg()
+
             if (it){
-                otpViewModel.mlivedataOtpRCD.observe(this@OTPVerificationActivity){
-                    Log.d("PR77777", "OTP Activity acces token: ${it.access}")
-                    Log.d("PR77777", "OTP Activity refresh: ${it.refresh}")
-                    saveToken(it.access)
-                    saverefreshToken(it.refresh)
-                    val intent = Intent(this@OTPVerificationActivity, HomeActivity::class.java)
-                    lifecycleScope.launch {
-                       delay(6000)
-                       //startActivity(intent)
-                   }
+                otpViewModel.mlivedataOtpRCD.observe(this@OTPVerificationActivity){otpresp->
+                    receivemsg().observe(this@OTPVerificationActivity){smsotp->
+                        if (smsotp!=null){
+                            showlogd(smsotp)
+                          var smsdigit=smsotp.filter { it.isDigit() }
+                            showlogd(smsdigit)
+                            recievedlivedata.value=smsdigit
+                            if (smsdigit==otpcode){
+                                saveToken(otpresp.access)
+                                saverefreshToken(otpresp.refresh)
+                                val intent = Intent(this@OTPVerificationActivity, HomeActivity::class.java)
+                                lifecycleScope.launch {
+                                    delay(6000)
+                                    startActivity(intent)
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
 
         }
 
         setContent {
-            otpverifyScreen(otpViewModel = otpViewModel, otpcode = otpcode!!, phone = phone!!)
+            val recstate:State<String> = recievedlivedata.observeAsState("Kuting")
+            otpverifyScreen(otpViewModel = otpViewModel, otpcode = recstate.value!!, phone = phone!!)
         }
     }
 
@@ -116,18 +131,22 @@ class OTPVerificationActivity : ComponentActivity() {
     }
 
 
-    private fun receivemsg() {
+    private fun receivemsg():MutableLiveData<String> {
+        var code=MutableLiveData<String>(null)
         var br  = object : BroadcastReceiver() {
             override fun onReceive(p0: Context?, p1: Intent?) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
                     for (sms: SmsMessage in Telephony.Sms.Intents.getMessagesFromIntent(p1)){
                         showlogd(sms.displayMessageBody.toString().isDigitsOnly().toString())
+                       code.value=sms.displayMessageBody.toString()
                         Toast.makeText(applicationContext,sms.displayMessageBody,Toast.LENGTH_LONG).show()
                     }
                 }
             }
         }
+
         registerReceiver(br, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+        return code
     }
 }
 

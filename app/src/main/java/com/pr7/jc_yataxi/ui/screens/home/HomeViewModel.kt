@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pr7.jc_yataxi.ui.data.network.models.district.response.DistrictR
 import com.pr7.jc_yataxi.ui.data.network.models.regions.response.RegionsR
 import com.pr7.jc_yataxi.ui.data.network.models.userinfo.response.UserInfoChangeRCD
 import com.pr7.jc_yataxi.ui.data.network.retrofit.RetrofitInstance
@@ -12,18 +13,27 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel constructor(): ViewModel() {
 
-    //reg
+    //userinfo
     val api= RetrofitInstance.api
     val mlivedatagetUserInfoRCD= MutableLiveData<UserInfoChangeRCD>()
     val completed= MutableLiveData<Boolean>()
     val succes= MutableLiveData<Boolean>(false)
 
+    //regions
     val mlivedataAllRegionsCD= MutableLiveData<ArrayList<RegionsR>>()
     val completedreg= MutableLiveData<Boolean>()
-    val succesreg= MutableStateFlow(false)
+    val succesreg= MutableLiveData<Boolean>(false)
 
+    //district
 
+    //regions
+    val mlivedataAllDistrictRCD= MutableLiveData<ArrayList<DistrictR>>()
+    val completeddis= MutableLiveData<Boolean>()
+    val succesdis= MutableLiveData<Boolean>(false)
 
+    val districtchoose=MutableLiveData<String>(null)
+    val districtfrom=MutableLiveData<String>(null)
+    val districtto=MutableLiveData<String>(null)
 
     fun getUserIinfoCD(token:String)=viewModelScope.launch{
         completed.postValue(false)
@@ -55,6 +65,23 @@ class HomeViewModel constructor(): ViewModel() {
 
         }
         completedreg.postValue(true)
+    }
+
+
+    fun getDistrictCD(token:String,id:Int)=viewModelScope.launch{
+        completeddis.postValue(false)
+        try {
+            val regresponse=api.getDisrict("Bearer $token",id=id)
+            mlivedataAllDistrictRCD.postValue(regresponse)
+            succesdis.value=true
+
+        }catch (e:Exception){
+            mlivedataAllDistrictRCD.postValue(ArrayList<DistrictR>())
+            succesdis.value=false
+            Log.d("PR77777", "getUserIinfoCD: ${e.message}")
+
+        }
+        completeddis.postValue(true)
     }
 
 

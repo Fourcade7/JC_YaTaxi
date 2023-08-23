@@ -92,6 +92,11 @@ fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChang
         }, hour, minute, false
     )
 
+    val districtfrom: State<String?> = homeViewModel.districtfrom.observeAsState()
+    val districtto: State<String?> = homeViewModel.districtto.observeAsState()
+    val districtchoose: State<String?> = homeViewModel.districtchoose.observeAsState()
+
+
 
 
 
@@ -185,6 +190,9 @@ fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChang
                     ) {
                         Column(Modifier.clickable {
                             navController.navigate(Screens.Regions.route)
+                            homeViewModel.succesreg.value=true
+                            homeViewModel.succesdis.value=false
+                            homeViewModel.districtchoose.value="from"
                         }) {
                             Text(
                                 text = "From",
@@ -198,7 +206,7 @@ fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChang
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
-                                text = "Select location",
+                                text = districtfrom.value.toString(),
                                 style = TextStyle(
                                     fontSize = 13.sp,
                                     lineHeight = 23.sp,
@@ -216,7 +224,12 @@ fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChang
 
                         Column(modifier = Modifier
                             .align(Alignment.BottomStart)
-                            .clickable { }) {
+                            .clickable {
+                                navController.navigate(Screens.Regions.route)
+                                homeViewModel.succesreg.value=true
+                                homeViewModel.succesdis.value=false
+                                homeViewModel.districtchoose.value="to"
+                            }) {
                             Text(
                                 text = "To",
                                 style = TextStyle(
@@ -229,7 +242,7 @@ fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChang
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
-                                text = "Select location",
+                                text = districtto.value.toString(),
                                 style = TextStyle(
                                     fontSize = 13.sp,
                                     lineHeight = 23.sp,

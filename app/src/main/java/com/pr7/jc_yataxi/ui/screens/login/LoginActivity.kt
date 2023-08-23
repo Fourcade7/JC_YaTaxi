@@ -1,6 +1,8 @@
 package com.pr7.jc_yataxi.ui.screens.login
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -50,6 +52,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.pr7.jc_yataxi.R
 import com.pr7.jc_yataxi.ui.data.network.models.login.request.LoginCD
 import com.pr7.jc_yataxi.ui.data.network.models.login.response.LoginRCD
@@ -67,6 +71,7 @@ class LoginActivity : ComponentActivity() {
     val loginViewModel:LoginViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        checkpermissioins()
         setContent {
                 loginScreen(loginViewModel = loginViewModel)
             loginViewModel.mlivedataLoginRCD.observe(this@LoginActivity){
@@ -74,6 +79,16 @@ class LoginActivity : ComponentActivity() {
                 Log.d("PR77777", "onCreate LOGIN Activity: ${it.message}")
                 Log.d("PR77777", "onCreate LOGIN Activity: ${it.statuscode}")
             }
+
+        }
+    }
+    fun checkpermissioins(){
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_MMS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_SMS),101)
+        } else {
 
         }
     }
