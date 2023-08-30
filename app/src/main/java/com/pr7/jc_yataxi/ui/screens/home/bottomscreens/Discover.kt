@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -79,6 +80,9 @@ fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChang
 
     var selectedTimeText by remember {
         mutableStateOf("00:00")
+    }
+    var passangercount by remember {
+        mutableIntStateOf(1)
     }
 
     // Fetching current hour, and minute
@@ -356,6 +360,7 @@ fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChang
                                         fontFamily = FontFamily(Font(R.font.mont_bold)),
                                         fontWeight = FontWeight(700),
                                         color = Color(0xFF17334C),
+
                                     )
                                 )
                             }
@@ -467,7 +472,7 @@ fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChang
                             Spacer(modifier = Modifier.height(7.dp))
 
                             Text(
-                                text = "1",
+                                text = "$passangercount",
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     lineHeight = 23.sp,
@@ -485,6 +490,9 @@ fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChang
                                 modifier = Modifier.align(CenterVertically),
                                 colors = CardDefaults.cardColors(LayoutbackgroundColors),
                                 onClick = {
+                                    if (passangercount>1){
+                                        passangercount--
+                                    }
 
                                 }
                             ) {
@@ -502,7 +510,10 @@ fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChang
                                 shape = CircleShape,
                                 modifier = Modifier.align(CenterVertically),
                                 colors = CardDefaults.cardColors(ButtonbackgroundLanguage),
-                                onClick = {}
+                                onClick = {
+                                    passangercount++
+
+                                }
                             ) {
 
                                 Icon(
@@ -525,7 +536,8 @@ fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChang
                         .padding(16.dp)
                         .height(54.dp)
                         .clickable {
-                            //context.startActivity(Intent(context, HomeActivity::class.java))
+                            //request here
+                            navController.navigate(Screens.Orders.route)
                         },
                     shape = RoundedCornerShape(15.dp),
                     color = ButtonbackgroundLanguage

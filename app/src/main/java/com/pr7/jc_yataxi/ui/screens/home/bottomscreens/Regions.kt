@@ -57,6 +57,7 @@ import kotlinx.coroutines.launch
 
 
 //@Preview(showBackground = true, showSystemUi = true)
+@ExperimentalMaterial3Api
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun regionsListScreen(navHostController: NavHostController,homeViewModel: HomeViewModel,token:String) {
@@ -120,9 +121,12 @@ fun regionsListScreen(navHostController: NavHostController,homeViewModel: HomeVi
 
             LazyColumn(contentPadding = PaddingValues(bottom = 100.dp)){
                 if (succesdis.value==true){
-                    itemsIndexed(arrayDistrictR.value!!){index: Int, item: DistrictR ->
-                        lazyitemdistrict(districtR = item, homeViewModel = homeViewModel, token = token, navHostController = navHostController)
+                    if (arrayDistrictR.value!=null){
+                        itemsIndexed(arrayDistrictR.value!!){index: Int, item: DistrictR ->
+                            lazyitemdistrict(districtR = item, homeViewModel = homeViewModel, token = token, navHostController = navHostController)
+                        }
                     }
+
                     homeViewModel.succesreg.value=false
                 } else{
                     itemsIndexed(arrayRegions.value!!){index: Int, item: RegionsR ->
@@ -153,6 +157,15 @@ fun lazyselectitem(regionsR: RegionsR,homeViewModel: HomeViewModel,token: String
             selecteditem = !selecteditem
             Log.d("PR77777", "lazyselectitem: ${regionsR.id} ${regionsR.name} ")
             homeViewModel.getDistrictCD(token, regionsR.id!!.toInt())
+
+            if (homeViewModel.districtchoose.value=="from"){
+                homeViewModel.regfromid.value=regionsR.id
+            }
+            if (homeViewModel.districtchoose.value=="to"){
+                homeViewModel.regtoid.value=regionsR.id
+
+            }
+
 
         }) {
         Box(
@@ -199,9 +212,10 @@ fun lazyitemdistrict(districtR: DistrictR,homeViewModel: HomeViewModel,token: St
             Log.d("PR77777", "lazyselectitem: ${districtR.id} ${districtR.name} ")
              if (homeViewModel.districtchoose.value=="from"){
                  homeViewModel.districtfrom.value=districtR.name
+                 homeViewModel.disfromid.value=districtR.id
              }
             if (homeViewModel.districtchoose.value=="to"){
-                homeViewModel.districtto.value=districtR.name
+                homeViewModel.distoid.value=districtR.id
             }
             navHostController.navigate(Screens.Discover.route)
 

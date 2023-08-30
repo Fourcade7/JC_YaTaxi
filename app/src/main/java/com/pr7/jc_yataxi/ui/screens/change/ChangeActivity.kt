@@ -47,6 +47,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.pr7.jc_yataxi.R
 import com.pr7.jc_yataxi.ui.data.pref.DataStoreManager
 import com.pr7.jc_yataxi.ui.data.pref.loadToken
+import com.pr7.jc_yataxi.ui.driver_screens.DriverActivity
 import com.pr7.jc_yataxi.ui.screens.home.HomeActivity
 import com.pr7.jc_yataxi.ui.screens.login.LoginActivity
 import com.pr7.jc_yataxi.ui.screens.register.RegisterActivity
@@ -67,9 +68,17 @@ class ChangeActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             dataStoreManager.loadString("usertype").collect{
-                if (it!=null){
+                if (it=="client"){
                     if (loadToken()!=null){
                         startActivity(Intent(this@ChangeActivity, HomeActivity::class.java))
+                    }else{
+                        startActivity(Intent(this@ChangeActivity, LoginActivity::class.java))
+
+                    }
+                }
+                if (it=="driver"){
+                    if (loadToken()!=null){
+                        startActivity(Intent(this@ChangeActivity, DriverActivity::class.java))
                     }else{
                         startActivity(Intent(this@ChangeActivity, LoginActivity::class.java))
 

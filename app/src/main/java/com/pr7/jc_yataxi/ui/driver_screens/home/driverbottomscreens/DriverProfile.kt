@@ -1,6 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
-
-package com.pr7.jc_yataxi.ui.screens.home.bottomscreens
+package com.pr7.jc_yataxi.ui.driver_screens.home.driverbottomscreens
 
 import android.content.Intent
 import androidx.compose.foundation.Image
@@ -20,7 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,8 +25,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,11 +50,10 @@ import com.pr7.jc_yataxi.ui.screens.home.ui.theme.LayoutbackgroundColors
 import com.pr7.jc_yataxi.ui.theme.ButtonbackgroundLanguage
 import kotlinx.coroutines.launch
 
-
-//@Preview(showSystemUi = true, showBackground = true)
 @ExperimentalMaterial3Api
+//@Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun profileScreen(homeViewModel: HomeViewModel,userInfoChangeRCD: UserInfoChangeRCD,dataStoreManager: DataStoreManager) {
+fun driverprofileScreen(dataStoreManager:DataStoreManager) {
     //val districtchoose: State<Userin> = homeViewModel.districtchoose.observeAsState()
     val scope= rememberCoroutineScope()
     val context= LocalContext.current
@@ -99,7 +93,7 @@ fun profileScreen(homeViewModel: HomeViewModel,userInfoChangeRCD: UserInfoChange
                     }
                 ) {
                     Row(
-                       modifier=Modifier.padding(start = 9.dp, end = 9.dp, top = 5.dp, bottom = 5.dp),
+                        modifier= Modifier.padding(start = 9.dp, end = 9.dp, top = 5.dp, bottom = 5.dp),
                         verticalAlignment = Alignment.CenterVertically,
 
                         ) {
@@ -133,7 +127,7 @@ fun profileScreen(homeViewModel: HomeViewModel,userInfoChangeRCD: UserInfoChange
                     .align(Alignment.BottomCenter)
                     .background(LayoutbackgroundColors)
 
-                )
+            )
             Image(
                 painter = painterResource(id = R.drawable.driverrealimage),
                 contentDescription = "driver",
@@ -149,7 +143,7 @@ fun profileScreen(homeViewModel: HomeViewModel,userInfoChangeRCD: UserInfoChange
             Spacer(modifier = Modifier.height(15.dp))
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "${userInfoChangeRCD.first_name} ${userInfoChangeRCD.last_name}",
+                text = "Aminov Fourcade 7",
                 textAlign = TextAlign.Center,
                 fontSize = 23.sp,
                 fontFamily = FontFamily(Font(R.font.mont_bold))
@@ -158,7 +152,7 @@ fun profileScreen(homeViewModel: HomeViewModel,userInfoChangeRCD: UserInfoChange
             Text(
                 modifier = Modifier
                     .fillMaxWidth(),
-                text = "${userInfoChangeRCD.phone}",
+                text = "+998918607335",
                 textAlign = TextAlign.Center,
                 fontSize = 15.sp,
                 fontFamily = FontFamily(Font(R.font.mont_light))
@@ -174,7 +168,7 @@ fun profileScreen(homeViewModel: HomeViewModel,userInfoChangeRCD: UserInfoChange
                         modifier = Modifier.clickable {
 
                         }
-                        ) {
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.globesettings),
                             contentDescription ="global",
@@ -203,7 +197,7 @@ fun profileScreen(homeViewModel: HomeViewModel,userInfoChangeRCD: UserInfoChange
                         modifier = Modifier.clickable {
 
                         }
-                        ) {
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.halfmoon),
                             contentDescription ="global",
@@ -232,7 +226,7 @@ fun profileScreen(homeViewModel: HomeViewModel,userInfoChangeRCD: UserInfoChange
                         modifier = Modifier.clickable {
 
                         }
-                        ) {
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.supportsettings),
                             contentDescription ="global",
@@ -261,7 +255,7 @@ fun profileScreen(homeViewModel: HomeViewModel,userInfoChangeRCD: UserInfoChange
                         modifier = Modifier.clickable {
 
                         }
-                        ) {
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.help),
                             contentDescription ="global",
@@ -290,7 +284,7 @@ fun profileScreen(homeViewModel: HomeViewModel,userInfoChangeRCD: UserInfoChange
                         modifier = Modifier.clickable {
 
                         }
-                        ) {
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.logout),
                             contentDescription ="global",
@@ -320,9 +314,9 @@ fun profileScreen(homeViewModel: HomeViewModel,userInfoChangeRCD: UserInfoChange
                             .padding(16.dp)
                             .height(54.dp)
                             .clickable {
-                                       scope.launch {
-                                           dataStoreManager.saveString("usertype","driver")
-                                       }
+                                scope.launch {
+                                    dataStoreManager.saveString("usertype","client")
+                                }
                                 context.startActivity(Intent(context, HomeActivity::class.java))
                             },
                         shape = RoundedCornerShape(15.dp),
@@ -331,7 +325,7 @@ fun profileScreen(homeViewModel: HomeViewModel,userInfoChangeRCD: UserInfoChange
                         Column(verticalArrangement = Arrangement.Center) {
 
                             Text(
-                                text = "Change to Driver",
+                                text = "Change to Client",
                                 modifier = Modifier.fillMaxWidth(),
                                 textAlign = TextAlign.Center,
                                 fontFamily = FontFamily(Font(R.font.mont_semibold)),
@@ -339,7 +333,7 @@ fun profileScreen(homeViewModel: HomeViewModel,userInfoChangeRCD: UserInfoChange
                         }
 
                     }
-                    
+
                 }
             }
         }

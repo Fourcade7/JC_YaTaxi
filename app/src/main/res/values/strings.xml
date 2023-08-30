@@ -6,4 +6,6 @@
     <string name="title_activity_otpverification">OTPVerificationActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_driver">DriverActivity</string>
+    <string name="title_activity_register_driver_name">RegisterDriverName</string>
 </resources>

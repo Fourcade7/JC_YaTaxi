@@ -21,8 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.pr7.jc_yataxi.ui.data.network.models.userinfo.response.UserInfoChangeRCD
+import com.pr7.jc_yataxi.ui.data.pref.DataStoreManager
 import com.pr7.jc_yataxi.ui.data.pref.loadRefreshToken
 import com.pr7.jc_yataxi.ui.data.pref.loadToken
+import com.pr7.jc_yataxi.ui.data.pref.saveToken
+import com.pr7.jc_yataxi.ui.data.pref.saverefreshToken
+import com.pr7.jc_yataxi.ui.screens.change.dataStoreManager
 import com.pr7.jc_yataxi.ui.screens.change.statusbarcolorchange
 import com.pr7.jc_yataxi.ui.screens.home.bottomscreens.BottomBar
 import com.pr7.jc_yataxi.ui.screens.home.bottomscreens.Screens
@@ -38,16 +42,25 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         showlogd(loadToken().toString())
         showlogd(loadRefreshToken().toString())
+        if (loadRefreshToken()!=null && loadToken()!=null){
+            homeViewModel.getnewFerfesh(loadRefreshToken().toString())
+            homeViewModel.succesref.observe(this@HomeActivity){
+                if (it){
+                    homeViewModel.mlivedataFerFeshToken.observe(this@HomeActivity){ferfesh->
+                        if (ferfesh!=null){
+                            saveToken(ferfesh.acces.toString())
+                            saverefreshToken(ferfesh.refresh.toString())
+                        }
+                    }
+                }
+            }
+        }
         if (loadToken()!=null){
             homeViewModel.getUserIinfoCD(loadToken().toString())
             //request here for regions
         }else{
             showlogd("token null")
         }
-
-
-
-
         setContent {
             var userinfoChangeState by remember {
                 mutableStateOf(UserInfoChangeRCD())
@@ -77,8 +90,25 @@ class HomeActivity : ComponentActivity() {
                     }
                 }
             }
+
+
             statusbarcolorchange(window = window)
-            bottombarScreen(userinfoChangeState, homeViewModel = homeViewModel,loadToken().toString())
+            bottombarScreen(userinfoChangeState, homeViewModel = homeViewModel,loadToken().toString(),dataStoreManager)
+        }
+
+        homeViewModel.regfromid.observe(this@HomeActivity){
+            showlogd("regions from id=$it")
+        }
+        homeViewModel.regtoid.observe(this@HomeActivity){
+            showlogd("regions to id=$it")
+        }
+
+        homeViewModel.disfromid.observe(this@HomeActivity){
+            showlogd("district from id=$it")
+        }
+
+        homeViewModel.distoid.observe(this@HomeActivity){
+            showlogd("district to id=$it")
         }
     }
 }
@@ -86,13 +116,13 @@ class HomeActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun bottombarScreen(userInfoChangeRCD: UserInfoChangeRCD,homeViewModel: HomeViewModel,token:String) {
+fun bottombarScreen(userInfoChangeRCD: UserInfoChangeRCD,homeViewModel: HomeViewModel,token:String,dataStoreManager: DataStoreManager) {
 
     val navController = rememberNavController()
     Scaffold(
         bottomBar ={ BottomBar(navHostController = navController) }
     ) {
-        bottomNavGraphSetup(navHostController = navController, userInfoChangeRCD = userInfoChangeRCD, homeViewModel = homeViewModel,token)
+        bottomNavGraphSetup(navHostController = navController, userInfoChangeRCD = userInfoChangeRCD, homeViewModel = homeViewModel,token,dataStoreManager)
         //navController.navigate(route = Screens.SeatChoose.route)
     }
 }

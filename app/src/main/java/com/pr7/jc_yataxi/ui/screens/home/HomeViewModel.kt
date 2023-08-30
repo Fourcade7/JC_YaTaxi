@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pr7.jc_yataxi.ui.data.network.models.district.response.DistrictR
+import com.pr7.jc_yataxi.ui.data.network.models.ferfesh_token.request.FerFeshToken
+import com.pr7.jc_yataxi.ui.data.network.models.ferfesh_token.response.FerFeshTokenR
 import com.pr7.jc_yataxi.ui.data.network.models.regions.response.RegionsR
 import com.pr7.jc_yataxi.ui.data.network.models.userinfo.response.UserInfoChangeRCD
 import com.pr7.jc_yataxi.ui.data.network.retrofit.RetrofitInstance
@@ -32,9 +34,19 @@ class HomeViewModel constructor(): ViewModel() {
     val succesdis= MutableLiveData<Boolean>(false)
 
     val districtchoose=MutableLiveData<String>(null)
-    val districtfrom=MutableLiveData<String>(null)
-    val districtto=MutableLiveData<String>(null)
+    val districtfrom=MutableLiveData<String>("Select Your Location")
+    val districtto=MutableLiveData<String>("Select Your Location")
 
+    val regfromid=MutableLiveData<Int>(null)
+    val regtoid=MutableLiveData<Int>(null)
+    val disfromid=MutableLiveData<Int>(null)
+    val distoid=MutableLiveData<Int>(null)
+
+    //ferfreshtoken
+    //regions
+    val mlivedataFerFeshToken= MutableLiveData<FerFeshTokenR>()
+    val completedref= MutableLiveData<Boolean>()
+    val succesref= MutableLiveData<Boolean>(false)
     fun getUserIinfoCD(token:String)=viewModelScope.launch{
         completed.postValue(false)
         try {
@@ -61,7 +73,7 @@ class HomeViewModel constructor(): ViewModel() {
         }catch (e:Exception){
             mlivedataAllRegionsCD.postValue(ArrayList<RegionsR>())
             succesreg.value=false
-            Log.d("PR77777", "getUserIinfoCD: ${e.message}")
+            Log.d("PR77777", "getAllRegions: ${e.message}")
 
         }
         completedreg.postValue(true)
@@ -78,10 +90,26 @@ class HomeViewModel constructor(): ViewModel() {
         }catch (e:Exception){
             mlivedataAllDistrictRCD.postValue(ArrayList<DistrictR>())
             succesdis.value=false
-            Log.d("PR77777", "getUserIinfoCD: ${e.message}")
+            Log.d("PR77777", "getDistrict: ${e.message}")
 
         }
         completeddis.postValue(true)
+    }
+
+    fun getnewFerfesh(token:String)=viewModelScope.launch{
+        completedref.postValue(false)
+        try {
+            val regresponse=api.getnewFerfesh(FerFeshToken(refresh = token))
+            mlivedataFerFeshToken.postValue(regresponse)
+            succesref.value=true
+
+        }catch (e:Exception){
+            mlivedataFerFeshToken.postValue(FerFeshTokenR(null))
+            succesref.value=false
+            Log.d("PR77777", "getnewToken: ${e.message}")
+
+        }
+        completedref.postValue(true)
     }
 
 

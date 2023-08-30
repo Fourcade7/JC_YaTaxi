@@ -66,8 +66,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.pr7.jc_yataxi.R
 import com.pr7.jc_yataxi.ui.data.network.models.verify_otp.request.OtpCD
+import com.pr7.jc_yataxi.ui.data.pref.DataStoreManager
 import com.pr7.jc_yataxi.ui.data.pref.saveToken
 import com.pr7.jc_yataxi.ui.data.pref.saverefreshToken
+import com.pr7.jc_yataxi.ui.driver_screens.DriverActivity
 import com.pr7.jc_yataxi.ui.screens.home.HomeActivity
 import com.pr7.jc_yataxi.ui.screens.register.RegisterActivity
 import com.pr7.jc_yataxi.ui.screens.register.ui.theme.FocusedBorderColor
@@ -78,9 +80,17 @@ import kotlinx.coroutines.launch
 
 class OTPVerificationActivity : ComponentActivity() {
     val otpViewModel: OtpViewModel by viewModels()
+    lateinit var dataStoreManager: DataStoreManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkpermissioins()
+
+       dataStoreManager =DataStoreManager(this@OTPVerificationActivity)
+
+
+
+
 
         var recievedlivedata=MutableLiveData<String>("Kuting")
         val otpcode = intent.getStringExtra("otpcode")
@@ -99,11 +109,26 @@ class OTPVerificationActivity : ComponentActivity() {
                             if (smsdigit==otpcode){
                                 saveToken(otpresp.access)
                                 saverefreshToken(otpresp.refresh)
-                                val intent = Intent(this@OTPVerificationActivity, HomeActivity::class.java)
+
                                 lifecycleScope.launch {
-                                    delay(6000)
-                                    startActivity(intent)
+                                    dataStoreManager.loadString("usertype").collect{usertype->
+                                        if (usertype=="client"){
+                                            val intent = Intent(this@OTPVerificationActivity, HomeActivity::class.java)
+
+                                                delay(6000)
+                                                startActivity(intent)
+
+                                        }
+                                        if (usertype=="driver"){
+                                            val intent = Intent(this@OTPVerificationActivity, DriverActivity::class.java)
+
+                                            delay(6000)
+                                            startActivity(intent)
+                                        }
+                                    }
                                 }
+
+
                             }
                         }
                     }

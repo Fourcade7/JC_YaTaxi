@@ -5,6 +5,7 @@
 package com.pr7.jc_yataxi.ui.screens.home.bottomscreens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -37,6 +42,19 @@ import com.pr7.jc_yataxi.R
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun seeatChooseScreen() {
+
+    var seatchose1 by remember {
+        mutableStateOf(false)
+    }
+    var seatchose2 by remember {
+        mutableStateOf(false)
+    }
+    var seatchose3 by remember {
+        mutableStateOf(false)
+    }
+    var seatchose4 by remember {
+        mutableStateOf(false)
+    }
 
     Column(
         modifier = Modifier
@@ -70,7 +88,7 @@ fun seeatChooseScreen() {
             Spacer(modifier = Modifier.width(15.dp))
             Text(
 
-                text = "Register",
+                text = "Select",
                 textAlign = TextAlign.Start,
                 fontSize = 20.sp,
                 fontFamily = FontFamily(Font(R.font.mont_semibold)),
@@ -81,7 +99,9 @@ fun seeatChooseScreen() {
         Image(
             painter = painterResource(id = R.drawable.carseat),
             contentDescription = "ko`k moshin",
-            modifier = Modifier.weight(2f).align(alignment = Alignment.CenterHorizontally)
+            modifier = Modifier
+                .weight(2f)
+                .align(alignment = Alignment.CenterHorizontally)
         )
         Column(
             modifier = Modifier
@@ -89,39 +109,53 @@ fun seeatChooseScreen() {
                 .weight(1.3f)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.seatblue),
+                painter = painterResource(if (seatchose1)  R.drawable.seatblue else R.drawable.seatempty),
                 contentDescription = "ko`k moshin",
                 modifier = Modifier
                     .width(60.dp)
                     .height(100.dp)
                     .align(alignment = Alignment.End)
+                    .clickable {
+                        seatchose1=!seatchose1
+                    }
             )
             Spacer(modifier = Modifier.width(15.dp))
             Box(
                 modifier = Modifier.fillMaxSize(),
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.seatempty),
+                    painter = painterResource(if (seatchose2)  R.drawable.seatblue else R.drawable.seatempty),
                     contentDescription = "ko`k moshin",
                     modifier = Modifier
                         .width(60.dp)
-                        .height(100.dp).align(Alignment.CenterStart)
+                        .height(100.dp)
+                        .align(Alignment.CenterStart)
+                        .clickable {
+                            seatchose2=!seatchose2
+                        }
 
                 )
                 Image(
-                    painter = painterResource(id = R.drawable.seatempty),
+                    painter = painterResource(if (seatchose3)  R.drawable.seatblue else R.drawable.seatempty),
                     contentDescription = "ko`k moshin",
                     modifier = Modifier
                         .width(60.dp)
-                        .height(100.dp).align(alignment = Alignment.Center)
-
+                        .height(100.dp)
+                        .align(alignment = Alignment.Center)
+                        .clickable {
+                            seatchose3=!seatchose3
+                        }
                 )
                 Image(
-                    painter = painterResource(id = R.drawable.seathidden),
+                    painter = painterResource(if (seatchose4)  R.drawable.seatblue else R.drawable.seatempty),
                     contentDescription = "ko`k moshin",
                     modifier = Modifier
                         .width(60.dp)
-                        .height(100.dp).align(alignment = Alignment.CenterEnd)
+                        .height(100.dp)
+                        .align(alignment = Alignment.CenterEnd)
+                        .clickable {
+                            seatchose4=!seatchose4
+                        }
 
                 )
             }
