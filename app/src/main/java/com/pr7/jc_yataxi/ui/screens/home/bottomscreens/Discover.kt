@@ -72,7 +72,7 @@ import com.pr7.jc_yataxi.ui.theme.ButtonbackgroundLanguage
 //@Preview(showSystemUi = true, showBackground = true)
 @ExperimentalMaterial3Api
 @Composable
-fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChangeRCD,homeViewModel: HomeViewModel) {
+fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChangeRCD,homeViewModel: HomeViewModel,token:String) {
 
 
     val context = LocalContext.current
@@ -536,7 +536,13 @@ fun discoverScreen(navController: NavController,userInfoChangeRCD: UserInfoChang
                         .padding(16.dp)
                         .height(54.dp)
                         .clickable {
-                            //request here
+                            homeViewModel.getdistricttaxi(
+                                token =token,
+                                fromdisid =homeViewModel.disfromid.value!!,
+                                todisid =homeViewModel.distoid.value!!,
+                                fromregid =homeViewModel.regfromid.value!!,
+                                toregid =homeViewModel.regtoid.value!!,
+                            )
                             navController.navigate(Screens.Orders.route)
                         },
                     shape = RoundedCornerShape(15.dp),

@@ -110,6 +110,10 @@ class HomeActivity : ComponentActivity() {
         homeViewModel.distoid.observe(this@HomeActivity){
             showlogd("district to id=$it")
         }
+
+        homeViewModel.succesdrivers.observe(this@HomeActivity){
+            showlogd("succes get all taxi $it")
+        }
     }
 }
 

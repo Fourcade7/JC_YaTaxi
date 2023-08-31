@@ -54,6 +54,7 @@ fun driverOrderScreen() {
     Column(
         modifier = Modifier.background(LayoutbackgroundColors)
     ) {
+        Spacer(modifier = Modifier.height(18.dp))
 
         Column( modifier = Modifier
             .padding(15.dp)) {

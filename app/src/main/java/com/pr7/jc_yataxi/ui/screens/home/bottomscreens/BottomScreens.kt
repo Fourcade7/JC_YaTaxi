@@ -158,8 +158,8 @@ fun bottomNavGraphSetup(
 
 
     NavHost(navController = navHostController, startDestination = Screens.Discover.route ){
-        composable(route = Screens.Discover.route){ discoverScreen(navHostController,userInfoChangeRCD,homeViewModel) }
-        composable(route = Screens.Orders.route){ orderScreen() }
+        composable(route = Screens.Discover.route){ discoverScreen(navHostController,userInfoChangeRCD,homeViewModel,token) }
+        composable(route = Screens.Orders.route){ orderScreen(homeViewModel) }
         composable(route = Screens.Profile.route){ profileScreen(homeViewModel,userInfoChangeRCD,dataStoreManager) }
         composable(route = Screens.SeatChoose.route){ seeatChooseScreen() }
         composable(route = Screens.Regions.route){ regionsListScreen(navHostController = navHostController, homeViewModel = homeViewModel, token = token) }

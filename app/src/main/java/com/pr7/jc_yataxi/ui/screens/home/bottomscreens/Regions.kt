@@ -215,6 +215,7 @@ fun lazyitemdistrict(districtR: DistrictR,homeViewModel: HomeViewModel,token: St
                  homeViewModel.disfromid.value=districtR.id
              }
             if (homeViewModel.districtchoose.value=="to"){
+                homeViewModel.districtto.value=districtR.name
                 homeViewModel.distoid.value=districtR.id
             }
             navHostController.navigate(Screens.Discover.route)
